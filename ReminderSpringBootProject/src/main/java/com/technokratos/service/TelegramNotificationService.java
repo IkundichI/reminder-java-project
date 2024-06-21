@@ -1,5 +1,6 @@
 package com.technokratos.service;
 
+import com.technokratos.property.TelegramProperty;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,18 +11,16 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-
 @Service
 @RequiredArgsConstructor
-public class TelegramNotificationService extends TelegramLongPollingBot{
+public class TelegramNotificationService extends TelegramLongPollingBot {
 
     private final UserService userService;
+    private final TelegramProperty telegramProperty;
 
-    private final String BOT_NAME = "reminder_java_test_bot";
-
-    private final String BOT_TOKEN = "6960216768:AAHxef8ij67NtV53f5I5wjhAnrcLwhPKniQ";
-
-    private String chatId;
+    private static final String REGISTRATION_SUCCESSFUL = "Registration successful";
+    private static final String REGISTRATION_FAILED = "Registration failed";
+    private static final String REGISTRATION_COMMAND = "/registration";
 
     @PostConstruct
     public void registerBot() {
@@ -48,12 +47,12 @@ public class TelegramNotificationService extends TelegramLongPollingBot{
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
-            if (message.getText().equals("/registration")) {
+            if (REGISTRATION_COMMAND.equals(message.getText())) {
                 String chatId = String.valueOf(message.getChatId());
                 if (saveChatId(message.getFrom().getUserName(), chatId)) {
-                    sendTelegramMessage(chatId, "Registration successful");
+                    sendTelegramMessage(chatId, REGISTRATION_SUCCESSFUL);
                 } else {
-                    sendTelegramMessage(chatId, "Registration failed");
+                    sendTelegramMessage(chatId, REGISTRATION_FAILED);
                 }
             }
         }
@@ -65,11 +64,11 @@ public class TelegramNotificationService extends TelegramLongPollingBot{
 
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return telegramProperty.getBotName();
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return telegramProperty.getBotToken();
     }
 }

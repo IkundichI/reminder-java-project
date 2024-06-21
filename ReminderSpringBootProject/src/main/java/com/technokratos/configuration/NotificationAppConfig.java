@@ -18,8 +18,8 @@ public class NotificationAppConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         val mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(emailProperty.getHOST());
-        mailSender.setPort(emailProperty.getPORT());
+        mailSender.setHost(emailProperty.getHost());
+        mailSender.setPort(emailProperty.getPort());
         mailSender.setUsername(emailProperty.getUsername());
         mailSender.setPassword(emailProperty.getPassword());
 

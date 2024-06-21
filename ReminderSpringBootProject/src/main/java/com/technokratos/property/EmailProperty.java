@@ -2,6 +2,7 @@ package com.technokratos.property;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,12 +10,27 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class EmailProperty {
 
-    public final String HOST = "smtp.gmail.com";
-    public final int PORT = 587;
-    public final String username = "artemi.arte.valeev@gmail.com";
-    public final String password = "ftpqujczmdwasfdg";
-    public final String protocol = "smtp";
-    public final String auth = "true";
-    public final String starttls = "true";
-    public final String debug = "false";
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.port}")
+    private int port;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @Value("${spring.mail.password}")
+    private String password;
+
+    @Value("${spring.mail.protocol}")
+    private String protocol;
+
+    @Value("${spring.mail.auth}")
+    private String auth;
+
+    @Value("${spring.mail.starttls}")
+    private String starttls;
+
+    @Value("${spring.mail.debug}")
+    private String debug;
 }

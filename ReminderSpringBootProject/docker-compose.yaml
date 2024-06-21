@@ -17,18 +17,24 @@ services:
     image: openjdk:17-jdk-slim
     container_name: reminder-spring-boot-project
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_LIQUIBASE_CHANGELOG: classpath:/db/changelog/db.changelog-master.yaml
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: artemi.arte.valeev@gmail.com
+      SPRING_MAIL_PASSWORD: ftpqujczmdwasfdg
+      SPRING_MAIL_PROTOCOL: smtp
+      SPRING_MAIL_AUTH: 'true'
+      SPRING_MAIL_STARTTLS_ENABLE: 'true'
+      SPRING_MAIL_DEBUG: 'false'
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_ID: Ov23ct2sjVlMzxTeRys3
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_SECRET: 3dd0399965491d5ca0c3eb9818183cdd23b3e68b
-      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_SCOPE: user:email
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_GITHUB_AUTHORIZATION_URI: https://github.com/login/oauth/authorize
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_GITHUB_TOKEN_URI: https://github.com/login/oauth/access_token
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_GITHUB_USER_INFO_URI: https://api.github.com/user
+      SPRING_TELEGRAM_BOT_NAME: reminder_java_test_bot
+      SPRING_TELEGRAM_BOT_TOKEN: 6960216768:AAHxef8ij67NtV53f5I5wjhAnrcLwhPKniQ
     ports:
       - "8080:8080"
     volumes:

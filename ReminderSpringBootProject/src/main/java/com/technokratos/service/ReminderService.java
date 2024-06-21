@@ -1,5 +1,7 @@
 package com.technokratos.service;
 
+import com.technokratos.dto.ReminderRequest;
+import com.technokratos.dto.ReminderResponse;
 import com.technokratos.model.Reminder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +13,12 @@ import java.util.UUID;
 @Service
 public interface ReminderService {
 
-    Reminder saveReminder(Reminder reminder);
+    ReminderResponse saveReminder(ReminderRequest reminder);
     void deleteReminder(UUID id);
-    Reminder updateReminder(Reminder reminder);
+    ReminderResponse updateReminder(UUID id, ReminderRequest reminder);
 
 
-    Page<Reminder> filterReminders(String date, String time, Pageable pageable);
-    Page<Reminder> listReminders(Pageable pageable);
-    Page<Reminder> sortReminders(String by, Sort.Direction direction, Pageable pageable);
+    Page<ReminderResponse> filterReminders(String date, String time, int page, int size);
+    Page<ReminderResponse> listReminders(int page, int size);
+    Page<ReminderResponse> sortReminders(String by, Sort.Direction direction, int page, int size);
 }

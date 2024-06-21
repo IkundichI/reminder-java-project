@@ -1,7 +1,10 @@
 package com.technokratos.service.impl;
 
-import com.technokratos.model.Reminder;
+import com.technokratos.dto.ReminderRequest;
+import com.technokratos.dto.ReminderResponse;
+import com.technokratos.mapper.ReminderMapper;
 import com.technokratos.repository.ReminderRepository;
+import com.technokratos.repository.UserRepository;
 import com.technokratos.service.ReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,10 +23,22 @@ import java.util.UUID;
 public class ReminderServiceImpl implements ReminderService {
 
     private final ReminderRepository reminderRepository;
+    private final UserRepository userRepository;
+    private final ReminderMapper reminderMapper;
+
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private static final String REMINDER_NOT_FOUND = "Reminder not found";
+    private static final String USER_NOT_FOUND = "User not found";
+
 
     @Override
-    public Reminder saveReminder(Reminder reminder) {
-        return reminderRepository.save(reminder);
+    public ReminderResponse saveReminder(ReminderRequest reminder) {
+        if (userRepository.findById(reminder.userId()).isEmpty()) {
+            throw new RuntimeException(USER_NOT_FOUND);
+        }
+        var rem = reminderMapper.toReminder(reminder);
+        reminderRepository.save(rem);
+        return reminderMapper.toReminderResponse(rem);
     }
 
     @Override
@@ -32,33 +47,37 @@ public class ReminderServiceImpl implements ReminderService {
     }
 
     @Override
-    public Reminder updateReminder(Reminder reminder) {
-        if (reminderRepository.findById(reminder.getId()).isPresent()) {
-            return reminderRepository.save(reminder);
+    public ReminderResponse updateReminder(UUID id, ReminderRequest reminder) {
+        if (reminderRepository.findById(id).isPresent()) {
+            var rem = reminderMapper.toReminder(reminder);
+            rem.setId(id);
+            reminderRepository.save(rem);
+            return reminderMapper.toReminderResponse(rem);
         }
-        throw new RuntimeException("Reminder not found");
+        throw new RuntimeException(REMINDER_NOT_FOUND);
     }
 
     @Override
-    public Page<Reminder> sortReminders(String by, Sort.Direction direction, Pageable pageable) {
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(direction, by));
-        return reminderRepository.findAll(sortedPageable);
+    public Page<ReminderResponse> sortReminders(String by, Sort.Direction direction, int page, int size) {
+        Pageable sortedPageable = PageRequest.of(page, size, Sort.by(direction, by));
+        return reminderRepository.findAll(sortedPageable).map(reminderMapper::toReminderResponse);
     }
 
     @Override
-    public Page<Reminder> filterReminders(String date, String time, Pageable pageable) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public Page<ReminderResponse> filterReminders(String date, String time, int page, int size) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date + " " + time, formatter);
-            return reminderRepository.findAllByReminderTime(dateTime, pageable);
+            Pageable pageable = PageRequest.of(page, size);
+            return reminderRepository.findAllByReminderTime(dateTime, pageable).map(reminderMapper::toReminderResponse);
         } catch (DateTimeParseException e) {
-            System.out.println("Failed to parse date and time: " + e.getMessage());
+            return Page.empty(PageRequest.of(page, size));
         }
-        return Page.empty(pageable);
     }
 
     @Override
-    public Page<Reminder> listReminders(Pageable pageable) {
-        return reminderRepository.findAll(pageable);
+    public Page<ReminderResponse> listReminders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return reminderRepository.findAll(pageable).map(reminderMapper::toReminderResponse);
     }
 }

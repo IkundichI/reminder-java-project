@@ -21,7 +21,7 @@ public class NotificationServiceImpl implements NotificationService {
             val simpleMailMessage = createSimpleMailMessage(toAddress, topic, message);
             emailSender.send(simpleMailMessage);
         } catch (Exception e) {
-            log.error(String.format("Failed to send email to %s", toAddress), e);
+            throw new RuntimeException("Failed to send email to " + toAddress, e);
         }
     }
 

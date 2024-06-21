@@ -33,3 +33,18 @@ spring:
             authorization-uri: https://github.com/login/oauth/authorize
             token-uri: https://github.com/login/oauth/access_token
             user-info-uri: https://api.github.com/user
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: artemi.arte.valeev@gmail.com
+    password: ftpqujczmdwasfdg
+    protocol: smtp
+    auth: true
+    starttls: true
+    debug: false
+
+  telegram:
+    bot:
+      name: reminder_java_test_bot
+      token: 6960216768:AAHxef8ij67NtV53f5I5wjhAnrcLwhPKniQ
