@@ -5,8 +5,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: password
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,8 +24,8 @@ spring:
       client:
         registration:
           github:
-            client-id: Ov23ct2sjVlMzxTeRys3
-            client-secret: 3dd0399965491d5ca0c3eb9818183cdd23b3e68b
+            client-id:
+            client-secret:
             scope:
               - user:email
         provider:
@@ -37,8 +37,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: artemi.arte.valeev@gmail.com
-    password: ftpqujczmdwasfdg
+    username:
+    password:
     protocol: smtp
     auth: true
     starttls: true
@@ -46,5 +46,5 @@ spring:
 
   telegram:
     bot:
-      name: reminder_java_test_bot
-      token: 6960216768:AAHxef8ij67NtV53f5I5wjhAnrcLwhPKniQ
+      name:
+      token:
